@@ -804,6 +804,13 @@
             
             const outputBlock = document.getElementById('outputBlock');
             outputBlock.classList.add('show');
+
+                    // 同步第三方加速链接
+                    const node = getThirdPartyNode();
+                    const thirdPartyLink = node.url + formattedLink;
+                    const thirdPartyOutput = document.getElementById('thirdPartyLinkOutput');
+                    thirdPartyOutput.textContent = thirdPartyLink;
+                    document.getElementById('thirdPartyOutputBlock').classList.add('show');
         }
 
                  function copyToClipboard() {
