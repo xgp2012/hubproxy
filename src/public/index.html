@@ -646,6 +646,44 @@
                 </div>
             </div>
 
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        🚀 第三方加速节点
+                    </h2>
+                    <p class="card-description">
+                        备用加速节点，如果当前节点不可用可尝试以下节点。
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-container">
+                        <input
+                            type="text"
+                            class="input"
+                            id="thirdPartyLinkInput"
+                            placeholder="请输入GitHub文件链接（可选，留空则仅复制节点地址）"
+                        >
+                        <button class="button button-primary" id="thirdPartyFormatButton">
+                            复制加速节点
+                        </button>
+                    </div>
+                </div>
+
+                <div class="output-container" id="thirdPartyOutputBlock">
+                    <div class="success-header">
+                        <span>✅</span>
+                        <strong>加速节点已复制</strong>
+                    </div>
+                    <div class="output-box" id="thirdPartyLinkOutput"></div>
+                    <div class="output-actions">
+                        <button class="button button-secondary" id="thirdPartyCopyButton">
+                            📋 复制链接
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="card docker-info">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -805,6 +843,68 @@
                  document.getElementById('formatButton').addEventListener('click', formatGithubLink);
         document.getElementById('copyButton').addEventListener('click', copyToClipboard);
         document.getElementById('redirButton').addEventListener('click', openLink);
+        document.getElementById('thirdPartyFormatButton').addEventListener('click', formatThirdPartyLink);
+        document.getElementById('thirdPartyCopyButton').addEventListener('click', copyThirdPartyLink);
+
+        document.getElementById('thirdPartyLinkInput').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                formatThirdPartyLink();
+            }
+        });
+
+        // 第三方加速节点
+        const THIRD_PARTY_NODES = [
+            { name: '灯塔加速', url: 'https://cf.dengta.de5.net/' }
+        ];
+        let selectedNodeIndex = 0;
+        const THIRD_PARTY_LABELS = THIRD_PARTY_NODES.map(n => n.name);
+
+        function getThirdPartyNode() {
+            const node = THIRD_PARTY_NODES[selectedNodeIndex];
+            return node;
+        }
+
+        function formatThirdPartyLink() {
+            const input = document.getElementById('thirdPartyLinkInput').value.trim();
+            const node = getThirdPartyNode();
+            let result = "";
+
+            if (input) {
+                if (input.startsWith("https://") || input.startsWith("http://")) {
+                    result = node.url + input;
+                } else {
+                    result = node.url + "https://" + input;
+                }
+            } else {
+                result = node.url;
+            }
+
+            const output = document.getElementById('thirdPartyLinkOutput');
+            output.textContent = result;
+            document.getElementById('thirdPartyOutputBlock').classList.add('show');
+        }
+
+        function copyThirdPartyLink() {
+            const output = document.getElementById('thirdPartyLinkOutput');
+            const text = output.textContent;
+            copyToClipboardWithText(text);
+        }
+
+        function copyToClipboardWithText(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('链接已复制到剪贴板');
+                });
+            } else {
+                const range = document.createRange();
+                range.selectNode(document.getElementById('thirdPartyLinkOutput'));
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                document.execCommand('copy');
+                window.getSelection().removeAllRanges();
+                showToast('链接已复制到剪贴板');
+            }
+        }
         
                  document.getElementById('githubLinkInput').addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
