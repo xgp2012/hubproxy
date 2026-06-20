@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Github文件加速、docker镜像加速">
+    <meta name="description" content="灯塔Github文件加速、docker镜像加速">
     <meta name="keywords" content="Github、文件加速、ghproxy、docker镜像加速">
     <meta name="color-scheme" content="dark light">
     <title>Github、Docker加速</title>
@@ -477,6 +477,82 @@
             color: var(--foreground);
         }
 
+        /* 赞助商广告样式 */
+        .sponsors-section {
+            padding: 2rem 1rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            background-color: var(--background);
+        }
+
+        .sponsors-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--foreground);
+        }
+
+        .sponsors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .sponsor-card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--foreground);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .sponsor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .sponsor-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .sponsor-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .sponsor-desc {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+            text-align: center;
+        }
+
+        .sponsor-badge {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -741,6 +817,26 @@
         </a>
     </footer>
 
+    <!-- 赞助商广告区域 -->
+    <section class="sponsors-section">
+        <h2 class="sponsors-title">🤝 合作伙伴</h2>
+        <div class="sponsors-grid">
+            <a href="https://cf.dengta.de5.net/" target="_blank" class="sponsor-card">
+                <div class="sponsor-logo">⚡</div>
+                <div class="sponsor-name">灯塔加速</div>
+                <div class="sponsor-desc">高性能第三方加速节点，解决访问慢问题</div>
+                <span class="sponsor-badge">推荐</span>
+            </a>
+
+            <a href="https://github.com/xgp2012/hubproxy" target="_blank" class="sponsor-card">
+                <div class="sponsor-logo">🔧</div>
+                <div class="sponsor-name">HubProxy</div>
+                <div class="sponsor-desc">开源加速代理项目，支持 Docker/GitHub/HuggingFace</div>
+                <span class="sponsor-badge">开源</span>
+            </a>
+        </div>
+    </section>
+
     <script>
                  const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
@@ -816,19 +912,30 @@
                  function copyToClipboard() {
             const output = document.getElementById('formattedLinkOutput');
             const text = output.textContent;
-            
+
+            if (!text) {
+                showToast('请先点击"获取加速链接"按钮生成链接');
+                return;
+            }
+
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(text).then(() => {
                     showToast('链接已复制到剪贴板');
+                }).catch(() => {
+                    showToast('复制失败，请手动复制');
                 });
-                         } else {
-                 const range = document.createRange();
-                range.selectNode(output);
-                window.getSelection().removeAllRanges();
-                window.getSelection().addRange(range);
-                document.execCommand('copy');
-                window.getSelection().removeAllRanges();
-                showToast('链接已复制到剪贴板');
+            } else {
+                try {
+                    const range = document.createRange();
+                    range.selectNode(output);
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(range);
+                    document.execCommand('copy');
+                    window.getSelection().removeAllRanges();
+                    showToast('链接已复制到剪贴板');
+                } catch (e) {
+                    showToast('复制失败，请手动复制');
+                }
             }
         }
 
