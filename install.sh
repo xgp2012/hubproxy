@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-REPO="${REPO:-gp2012/hubproxy}"
+REPO="${REPO:xgp2012/hubproxy}"
 VERSION="${VERSION:-latest}"
 TMP_DIR="${TMP_DIR:-/tmp/hubproxy-install}"
 
